@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RizzemUp</title>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js"></script>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #121212, #1f1f1f);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    .btn {
+      background: #00c9a7;
+      color: black;
+      padding: 15px 30px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 18px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    .rizz-box {
+      margin-top: 30px;
+      font-size: 22px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>RizzemUp</h1>
+  <button class="btn" onclick="loginWithGoogle()">Prijavi se z Gmailom</button>
+  <div id="rizz-container" class="rizz-box" style="display:none;">
+    <p id="welcome-text"></p>
+    <button class="btn" onclick="showRizz()">Zrizaj!</button>
+    <div id="rizz-result" style="margin-top:20px;"></div>
+  </div>
+
+  <script>
+    // Firebase konfiguracija (ZAMENJAJ Z TVOJO!)
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    function loginWithGoogle() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          const user = result.user;
+          document.querySelector('.btn').style.display = 'none';
+          document.getElementById('rizz-container').style.display = 'block';
+          document.getElementById('welcome-text').innerText = `Pozdravljen, ${user.displayName}!`;
+        })
+        .catch(error => {
+          alert('Napaka pri prijavi: ' + error.message);
+        });
+    }
+
+    const rizzi = [
+      "Hej kralj, danes ti pa vse gre!",
+      "Tvoj nasmeh je orožje.",
+      "Ti si razlog, da sonce sije.",
+      "Kamorkoli greš, pustiš vtis.",
+      "Šef stajla, brez dvoma."
+    ];
+
+    function showRizz() {
+      const randomRizz = rizzi[Math.floor(Math.random() * rizzi.length)];
+      document.getElementById('rizz-result').innerText = randomRizz;
+    }
+  </script>
+</body>
+</html>
